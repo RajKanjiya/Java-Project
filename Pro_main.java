@@ -3,18 +3,17 @@ import java.util.Scanner;
 class Pro_main {
 
     //create variables and initialization variable
-
     static String[][] userDetails = new String[10][2];
-    static String[] username = new String[10];
-    static String[] passwords = new String[10];
     static double[] balance = new double[10];
     static int userCount = 0;
     static Scanner Input = new Scanner(System.in);
 
+    //main method
     public static void main(String[] args) {
         mainMenu();
     }
 
+    //methods for user registration
     public static void registerUser() {
         Input.nextLine();
 
@@ -26,7 +25,7 @@ class Pro_main {
         balance[userCount] = Input.nextInt();
 
         for (int i = 0; i < userCount; i++) {
-            if (userDetails[i][0].equals(userDetails[i][0])) {
+            if (userDetails[userCount][0].equals(userDetails[i][0])) {
                 System.out.println("\n\nThis username is already taker please tyr other one!\n\n");
                 mainMenu();
                 return;
@@ -35,13 +34,15 @@ class Pro_main {
         userCount++;
 
         System.out.println("\nRegistration Successfully And now you can login");
+        mainMenu();
     }
 
+    //method for login user , check balance, withdraw money, deposit money, and logout
     public static void loginUser() {
         Input.nextLine();
         int userNo = validateUser();
         char ch;
-        if (userNo == 0) {
+        if (userNo == -1) {
             System.out.println("Invalid username or password");
         }
 
@@ -49,10 +50,10 @@ class Pro_main {
 
 
         do {
-            System.out.println("\n\n1 for Check balance\n2 for withdraw money\n3 for Deposit money\n4 for Main manu");
-            char c = Input.next().charAt(0);
+            System.out.println("\n\n1 for Check balance\n2 for withdraw money\n3 for Deposit money\n4 for Main manu\n5 Logout");
+            int choice = Input.nextInt();
 
-            switch (c) {
+            switch (choice) {
                 case 1:
                     displayBalance();
                     break;
@@ -65,18 +66,25 @@ class Pro_main {
                 case 4:
                     mainMenu();
                     break;
+                case 5:
+                    System.out.println("Logout Successfully");
+                    mainMenu();
+                    break;
                 default:
                     System.out.println("Please enter valid number");
 
             }
-            System.out.println("\nDo you want to do any other things(Y/N)");
+            System.out.println("\nDo you want to do any other things (Y) for continue or (N) for logout and go to main menu");
             ch = Input.next().charAt(0);
         } while (ch == 'Y' || ch == 'y');
+        System.out.println("Logout Successfully");
+        mainMenu();
     }
 
     public static void displayBalance() {
+        Input.nextLine();
         int userNo = validateUser();
-        if (userNo == 0) {
+        if (userNo == -1) {
             System.out.println("Username or password is incorrect");
             return;
         }
@@ -84,8 +92,9 @@ class Pro_main {
     }
 
     public static void displayAccountDetails() {
+        Input.nextLine();
         int userNo = validateUser();
-        if (userNo == 0) {
+        if (userNo == -1) {
             System.out.println("Username or password is incorrect");
             return;
         }
@@ -95,8 +104,9 @@ class Pro_main {
     }
 
     public static void depositMoney() {
+        Input.nextLine();
         int userNo = validateUser();
-        if (userNo == 0) {
+        if (userNo == -1) {
             System.out.println("Username or password is incorrect");
             return;
         }
@@ -104,14 +114,10 @@ class Pro_main {
         balance[userNo] += Input.nextInt();
     }
 
-//    public static void depositMoney(int user) {
-//        System.out.print("\nEnter amount to be added: ");
-//        balance[user] += Input.nextInt();
-//    }
-
     public static void withdrawMoney() {
+        Input.nextLine();
         int userNo = validateUser();
-        if (userNo == 0) {
+        if (userNo == -1) {
             System.out.println("Username or password is incorrect");
             return;
         }
@@ -120,6 +126,7 @@ class Pro_main {
         float withdraw = Input.nextInt();
 
         if (!(balance[userNo] - withdraw >= 0)) {
+            System.out.println("\nInsufficient balance");
             return;
         }
 
@@ -127,6 +134,7 @@ class Pro_main {
         System.out.println("\nWithdraw Successfully");
     }
 
+    //when we use this method it will validate the user and return user number if user is valid it gives the that user number
     public static int validateUser() {
         String name, password;
 
@@ -135,29 +143,17 @@ class Pro_main {
         System.out.println("\nEnter Password");
         password = Input.nextLine();
 
-        for (int i = 0; i < username.length; i++) {
+        for (int i = 0; i < userDetails.length; i++) {
             if (userDetails[i][0].equals(name) && userDetails[i][1].equals(password)) {
-                return i - 1;
+                return i;
             }
         }
-        return 0;
+        return -1;
     }
-
-    /*public static boolean checkRegistration(String name, String password, String msg) {
-        int i;
-        for (i = 0; i < username.length; i++) {
-            if (!(username[i].equals(name) && passwords[i].equals(password))) {
-                System.out.println(msg);
-                return false;
-            }
-        }
-        return true;
-    }
-    */
 
     public static void mainMenu() {
         int choice;
-        char c = ' ';
+        char c;
 
         do {
             System.out.println("Menu: \n1 for Registration \n2 for Login\n3 for Deposit Money\n4 for Withdrew Money\n5 for Show balance\n6 for View account details \n7 for Exit");
@@ -185,7 +181,7 @@ class Pro_main {
                     break;
                 case 7:
                     System.out.println("Exiting...");
-                    break;
+                    return;
                 default:
                     System.out.println("Please enter valid input");
                     break;
