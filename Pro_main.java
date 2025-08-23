@@ -1,12 +1,27 @@
 import java.util.Scanner;
 
+
+class User {
+    //    static Scanner Input = new Scanner(System.in);
+    String username, password, email, balance;
+
+    User(String username, String password, String email) {
+        this.username = username;
+        this.password = password;
+        this.email = email;
+        this.balance = "0";
+    }
+}
+
+
 class Pro_main {
 
     //create variables and initialization variable
     static int Max_user = 10; //Max user count
-    static String[][] userDetails = new String[Max_user][4];
     static int userCount = 0;//when user register successfully then it can increase by 1
     static Scanner Input = new Scanner(System.in); //static Scanner object to use in whole methods
+    static User[] users = new User[Max_user];
+
 
     //main method
     public static void main(String[] args) {
@@ -65,7 +80,7 @@ class Pro_main {
 
         //chek username is already taken or not
         for (int i = 0; i < userCount; i++) {
-            if (userDetails[i][0].equals(name)) {
+            if (users[i].username.equals(name)) {
                 System.out.println("\n\n--This username is already taker please tyr other one!--\n\n");
                 return;
             }
@@ -86,10 +101,7 @@ class Pro_main {
             return;
         }
 
-        userDetails[userCount][0] = name;
-        userDetails[userCount][1] = password;
-        userDetails[userCount][2] = "0.0";
-        userDetails[userCount][3] = email;
+        users[userCount] = new User(name, password, email);
         userCount++;
 
         System.out.println("\n---Registration Successfully And now you can login---");
@@ -102,7 +114,7 @@ class Pro_main {
         int i;
 
         for (i = 0; i < userCount; i++) {
-            if (userDetails[i][0].equals(name) && userDetails[i][1].equals(password)) {
+            if (users[i].username.equals(name) && users[i].password.equals(password)) {
                 userNo = i;
                 break;
             }
@@ -114,7 +126,7 @@ class Pro_main {
             return;
         }
 
-        System.out.println("\n\n---Login Successfully---\n\n---Welcome " + userDetails[userNo][0] + "---\n");
+        System.out.println("\n\n---Login Successfully---\n\n---Welcome " + users[userNo].username + "---\n");
 
 
         do {
@@ -149,14 +161,14 @@ class Pro_main {
 
 
     public static void displayBalance(int userNo) {
-        System.out.println("\nBalance: " + userDetails[userNo][2]);
+        System.out.println("\nBalance: " + users[userNo].balance);
     }
 
     public static void displayAccountDetails(int userNo) {
-        System.out.println("\nName: " + userDetails[userNo][0] + "\n");
-        System.out.println("\nPassword: " + userDetails[userNo][1] + "\n");
-        System.out.println("\nBalance: " + userDetails[userNo][2]);
-        System.out.println("\nEmail: " + userDetails[userNo][3]);
+        System.out.println("\nName: " + users[userNo].username + "\n");
+//        System.out.println("\nPassword: " + users[userNo].password + "\n");
+        System.out.println("\nBalance: " + users[userNo].balance);
+        System.out.println("\nEmail: " + users[userNo].email);
     }
 
     public static void depositMoney(int userNo, double deposit) {
@@ -165,9 +177,9 @@ class Pro_main {
             return;
         }
 
-        double curAmount = Double.parseDouble(userDetails[userNo][2]);
+        double curAmount = Double.parseDouble(users[userNo].balance);
         curAmount += deposit;
-        userDetails[userNo][2] = String.valueOf(curAmount);
+        users[userNo].balance = String.valueOf(curAmount);
 
         System.out.println("\n---Deposit successfully---");
     }
@@ -179,7 +191,7 @@ class Pro_main {
             return;
         }
 
-        double curAmount = Double.parseDouble(userDetails[userNo][2]);
+        double curAmount = Double.parseDouble(users[userNo].balance);
 
         if (!(curAmount - withdraw >= 0)) {
             System.out.println("\n--Insufficient balance--");
@@ -187,7 +199,7 @@ class Pro_main {
         }
 
         curAmount -= withdraw;
-        userDetails[userNo][2] = String.valueOf(curAmount);
+        users[userNo].balance = String.valueOf(curAmount);
         System.out.println("\n---Withdraw Successfully---");
     }
 }
